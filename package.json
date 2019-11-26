@@ -1,32 +1,32 @@
 {
-    "name": "iopa-types",
-    "version": "3.0.0",
-    "description": "Use the IOPA framework in TypeScript with zero runtime overhead",
-    "author": "iopa <build@iopa.io>",
-    "license": "Apache-2.0",
-    "types": "src/index.ts",
-    "ts:main": "index.d.ts",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/iopa-io/iopa-types.git"
-    },
-    "dependencies": {},
-    "keywords": [
-        "iopa",
-        "serverless",
-        "cloudflare",
-        "workers",
-        "functions",
-        "lambda",
-        "azure function",
-        "google cloud function",
-        "node",
-        "bot",
-        "conversational agent"
-    ],
-    "engines": {},
-    "scripts": {
-        "format": "prettier --ignore-path ../../.gitignore --write '**/*.{js,jsx,ts,tsx,json,md}'"
-    },
-    "homepage": "https://iopa.io"
+  "name": "iopa-types",
+  "version": "3.0.0",
+  "description": "Use the IOPA framework in TypeScript with zero runtime overhead",
+  "author": "iopa <build@iopa.io>",
+  "license": "Apache-2.0",
+  "types": "src/index.ts",
+  "ts:main": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iopa-io/iopa-types.git"
+  },
+  "dependencies": {},
+  "keywords": [
+    "iopa",
+    "serverless",
+    "cloudflare",
+    "workers",
+    "functions",
+    "lambda",
+    "azure function",
+    "google cloud function",
+    "node",
+    "bot",
+    "conversational agent"
+  ],
+  "engines": {},
+  "scripts": {
+    "format": "prettier --ignore-path ../../.gitignore --write '**/*.{js,jsx,ts,tsx,json,md}'"
+  },
+  "homepage": "https://iopa.io"
 }
