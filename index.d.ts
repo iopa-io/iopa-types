@@ -446,6 +446,73 @@ export interface BotReading {
   botːTimestamp: number | null;
   /** (The source message as entered by the user (with mentions normalized as needed)) */
   botːText: string;
+  /** The urn of the conversational agent service provider e.g., "urn:io.iopa.bot:slack", "urn:io.iopa.bot:alexa" */
+  botːAttachment?: BotAttachment
+  /** The section header string for grouping purposes */
+  botːSection?: string
+}
+
+/**
+ * An attachment within a Bot Reading
+ * @export
+ * @interface BotAttachment
+ */
+export interface BotAttachment {
+  /**
+   * mimetype/Contenttype for the file
+   * @type {string}
+   * @memberof BotAttachment
+   */
+  contentType?: 'application/vnd.microsoft.card.adaptive' 
+  /**
+   * Embedded content
+   * @type {any}
+   * @memberof BotAttachment
+   */
+  content?: any
+}
+
+export interface BotMessageStore {
+  items: Partial<BotReading>[]
+  push: (item: Partial<BotReading>) => Promise<void>
+  store_: (item: Partial<BotReading>) => Promise<void>
+  clear: () => Promise<void>
+
+  closeCard: (seq?: number) => Promise<void>
+  removeCard: (seq: number) => Promise<void>
+
+  typingIndicatorOn: () => void
+  typingIndicatorOff: () => void
+ 
+  addListener?: (type: string, listener: Function) => void
+  removeListener?: (type: string, listener: Function) => void
+  emit: (event, ...args) => void
+
+  utterances: string[]
+}
+
+export interface BotCapabilities {
+
+  'urn:io.iopa:app'?: {
+    'iopa.Version': string
+    [key: string]: any
+  }
+
+  'urn:consumer:profile'?: {
+    'urn:consumer:firstname': string
+  }
+
+  'urn:io:iopa:bot:speech': {
+    speak: Function
+    speakWithPromise: Function
+  }
+
+  'urn:io.iopa.filestorage': {
+    put: Function
+  }
+
+  'urn:io.iopa.bot.message': BotMessageStore
+
 }
 
 export interface BotSessionDialog {
