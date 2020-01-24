@@ -20,8 +20,19 @@ interface AppPlugin {
   usePlugin(plugin: Plugin): this;
 }
 
+export type Capabilities = {
+  [key: string]:
+    | {
+        "iopa.Version"?: string;
+        [key: string]: any;
+      }
+    | any
+    | undefined;
+};
+
 export interface App extends AppBotConnector, AppIopaBot, AppPlugin {
   properties: AppProperties;
+  capabilities: Capabilities;
 
   /** add new middleware to the when-do enginge */
   use(Middleware: Middleware): this;
@@ -45,6 +56,10 @@ export interface App extends AppBotConnector, AppIopaBot, AppPlugin {
       [key: string]: any;
     }
   ): Context;
+}
+
+export interface AppWithCapabilities<T> extends App {
+  capabilities: Capabilities & T;
 }
 
 export interface RouterApp extends App {
@@ -104,28 +119,45 @@ export type Invoker = (context: Context) => Promise<void>;
 export type Middleware = FC | Component;
 
 export interface AppProperties {
-  serverːAppId: string;
-  serverːCapabilities: any;
-  serverːLogger: Console;
-  serverːPipeline: FC;
-  serverːVersion: string;
-  appːDefaultApp: Middleware;
-  appːDefaultMiddleware: Middleware;
+  server_AppId: string;
+  server_Logger: Console;
+  server_Pipeline: FC;
+  server_Version: string;
+  app_DefaultApp: Middleware;
+  app_DefaultMiddleware: Middleware;
 }
 
 //
 // Context Keys
 //
 
-export type UNICODE_COLON = "ː";
+export type UNICODE_COLON = "_";
 
-export type Context = IopaContext;
+export interface Context extends IopaContext {
+  /** server Capabilities */
+  capabilities: Capabilities;
+
+  /** @deprecated use capabilities instead */
+  ["server.Capabilities"]?: Capabilities;
+
+  /** the session context */
+  bot_Session?: any;
+
+  /** the raw text entered by the user, for Iopa Bot Framework */
+  bot_Text?: string;
+
+  /** the inferred intent corresponding to the text entered by the user, for Iopa Bot Framework */
+  bot_Intent?: string;
+
+  /**  The IopaResponse record enhanced with Iopa Bot Framework methods */
+  response: IopaBotResponse;
+}
 
 export interface ContextCore {
-  iopaːVersion: string;
-  iopaːSeq: string;
-  iopaːEvents: IEventEmitter;
-  serverːCapabilities: any;
+  iopa_Version: string;
+  iopa_Seq: string;
+  iopa_Events: IEventEmitter;
+  capabilities: any;
   dispose?: () => void;
   create?(...args: any[]): ContextCore;
   log?: (...args: any) => void;
@@ -134,16 +166,16 @@ export interface ContextCore {
 }
 
 export interface ContextBase extends ContextCore {
-  readonly iopaːVersion: string;
-  readonly iopaːSeq: string;
-  readonly iopaːEvents: IEventEmitter;
-  readonly serverːCancelTokenSource: CancellationTokenSource;
-  readonly serverːCancelToken: CancellationToken;
-  readonly serverːCapabilities: any;
-  readonly serverːTimestamp: number;
-  readonly serverːSource: string;
+  readonly iopa_Version: string;
+  readonly iopa_Seq: string;
+  readonly iopa_Events: IEventEmitter;
+  readonly server_CancelTokenSource: CancellationTokenSource;
+  readonly server_CancelToken: CancellationToken;
+  readonly capabilities: any;
+  readonly server_Timestamp: number;
+  readonly server_Source: string;
   readonly dispose?: () => void;
-  serverːgetTimeElapsed?(): number;
+  server_getTimeElapsed?(): number;
 }
 
 export interface IopaContext extends ContextBase, Partial<IopaRequest> {
@@ -151,48 +183,48 @@ export interface IopaContext extends ContextBase, Partial<IopaRequest> {
 }
 
 export interface WriteableContextBase extends ContextCore {
-  serverːCancelTokenSource: any;
-  serverːCancelToken: any;
-  serverːCapabilities: any;
-  serverːTimestamp: number;
-  serverːSource: string;
+  server_CancelTokenSource: any;
+  server_CancelToken: any;
+  capabilities: any;
+  server_Timestamp: number;
+  server_Source: string;
 }
 
 export interface IopaRequest {
-  readonly iopaːHeaders: Map<string, string>;
-  readonly iopaːMethod: string;
-  readonly iopaːOriginalUrl: string;
-  readonly iopaːUrl: IURL;
-  readonly iopaːPath: string;
-  readonly iopaːProtocol: string;
-  readonly iopaːQueryString: string;
-  readonly iopaːScheme: string;
-  readonly iopaːBody: Promise<any>;
-  readonly iopaːRemoteAddress: string;
-  readonly iopaːLabels: Map<string, string>;
+  readonly iopa_Headers: Map<string, string>;
+  readonly iopa_Method: string;
+  readonly iopa_OriginalUrl: string;
+  readonly iopa_Url: IURL;
+  readonly iopa_Path: string;
+  readonly iopa_Protocol: string;
+  readonly iopa_QueryString: string;
+  readonly iopa_Scheme: string;
+  readonly iopa_Body: Promise<any>;
+  readonly iopa_RemoteAddress: string;
+  readonly iopa_Labels: Map<string, string>;
 }
 
 export interface WriteableIopaRequest extends WriteableContextBase {
-  iopaːHeaders: Map<string, string>;
-  iopaːMethod: string;
-  iopaːOriginalUrl: string;
-  iopaːUrl: IURL;
-  iopaːPath: string;
-  iopaːProtocol: string;
-  iopaːQueryString: string;
-  iopaːScheme: string;
-  iopaːBody: Promise<any>;
-  iopaːRemoteAddress: string;
-  iopaːLabels: Map<string, string>;
+  iopa_Headers: Map<string, string>;
+  iopa_Method: string;
+  iopa_OriginalUrl: string;
+  iopa_Url: IURL;
+  iopa_Path: string;
+  iopa_Protocol: string;
+  iopa_QueryString: string;
+  iopa_Scheme: string;
+  iopa_Body: Promise<any>;
+  iopa_RemoteAddress: string;
+  iopa_Labels: Map<string, string>;
 }
 
 export interface IopaResponse extends ContextCore {
-  iopaːBody: any;
-  iopaːHeaders: Map<string, string>;
-  iopaːSize: number;
-  iopaːStatusCode: number;
-  iopaːStatusText: string;
-  readonly iopaːProtocol: string;
+  iopa_Body: any;
+  iopa_Headers: Map<string, string>;
+  iopa_Size: number;
+  iopa_StatusCode: number;
+  iopa_StatusText: string;
+  readonly iopa_Protocol: string;
   end(
     chunk?: any,
     options?: { headers?: any; status?: number; statustext?: string }
@@ -284,6 +316,9 @@ export declare class CancellationToken {
 //
 
 interface AppIopaBot {
+  /** @deprecated add a v1 dialog;  use reactivedialogs.use() going forward */
+  dialog(name: string, ...args: any[]): void;
+
   /** register a new intent handler for the default skill  */
   intent(intentName: string, func: FC): this;
   intent(intentName: string, schema: any, func: FC): this;
@@ -293,6 +328,9 @@ interface AppIopaBot {
 
   /** add a new skill with given name and return it */
   skill(name: string): any;
+
+  /** shortcut access to reactivedialogs capability */
+  reactivedialogs: any;
 }
 
 interface AppBotConnector {
@@ -302,9 +340,14 @@ interface AppBotConnector {
   createReading(source: any): void;
 }
 
+export type IopaBotCard = {
+  type: string;
+  [key: string]: any;
+};
+
 export interface BotResponseMethods {
   /** Send a text string or card attachments, looping with delay if multiple provided */
-  sendAll(body: (string | { [key: string]: any })[]): Promise<void>;
+  sendAll(body: (string | IopaBotCard)[]): Promise<void>;
 
   /** Show platform typing indicator */
   showTypingIndicator(): Promise<void>;
@@ -316,7 +359,7 @@ export interface BotResponseMethods {
   say(text: string): IopaBotResponse;
 
   /** Helper method to load up a card */
-  card(card: any): IopaBotResponse;
+  card(card: IopaBotCard): IopaBotResponse;
 
   /** Helper method to reprompt a text string */
   shouldEndSession(flag: boolean): IopaBotResponse;
@@ -336,29 +379,31 @@ export interface BotResponseMethods {
 
 export interface IopaBotContext extends IopaContext, BotReading {}
 
-export interface IopaBotResponse extends IopaResponse, BotResponseMethods {
+export interface IopaBotResponse
+  extends IopaResponse,
+    Partial<BotResponseMethods> {
   //
   // Extended Properties
   //
 
   /** Flag set once a response has been handled */
-  botːResponseHandled?: boolean;
+  bot_ResponseHandled?: boolean;
 
   /** Flag indicating this activity should end the current dialog */
-  botːShouldEndSession?: boolean;
+  bot_ShouldEndSession?: boolean;
 
   /** Flag indicating typing delay is disabled for this bot/session */
-  botːIsDelayDisabled?: boolean;
+  bot_IsDelayDisabled?: boolean;
 
   //
   // Methods in both IopaResponse and BotResponseMethods win from BotResponseMethods
   //
 
   /** Helper method to send a given text, card or any of the above if already queued up */
-  send: (body?: string | any) => Promise<void>;
+  send: (body?: string | any, options?: any) => Promise<void>;
 
   /** Send a text string or card attachments, looping with delay if multiple provided */
-  sendAll(body: (string | { [key: string]: any })[]): Promise<void>;
+  sendAll?(body: (string | { [key: string]: any })[]): Promise<void>;
 }
 
 export type BotActivityRawTypes =
@@ -419,37 +464,65 @@ export type BotActivityTypes = BotActivityRawTypes & BotActivityEmitTypes;
 
 export interface BotReading {
   /** The unique identifier for this particular context activity    */
-  botːActivityId: string;
+  bot_ActivityId?: string;
   /** The type of this particular context activity    */
-  botːActivityType: BotActivityTypes;
+  bot_ActivityType?: BotActivityTypes;
   /**  The channel identifier within team */
-  botːChannel: { id: string; name?: string };
+  bot_Channel?: { id: string; name?: string };
   /** The conversation reference (property bag as defined by source platform)  */
-  botːConversation: any;
+  bot_Conversation?: any;
   /** The unique id of the user (global and within the domain of the source platform) */
-  botːFrom: { id: string; localid?: string; name?: string };
+  bot_From: { id: string; localid?: string; name?: string };
   /** The intent of the message (usually derived in middleware by parsing audio or free form text, but may be provided by service provider such as Alexa) */
-  botːIntent: string;
+  bot_Intent?: string;
+  /** Consumer app metadata for this record */
+  bot_MetaData: { isRead?: boolean; isClosed?: boolean };
   /** The platform provider within the source platform e.g., "msteams" */
-  botːProvider: string;
+  bot_Provider?: string;
   /** The unique id of the bot (global and within the domain of the source platform)  */
-  botːRecipient: { id: string; localid?: string; name?: string };
+  bot_Recipient?: { id: string; localid?: string; name?: string };
   /** The endpoint associated with the provider (e.g., botframework channel serviceurl) */
-  botːServiceUrl: string;
+  bot_ServiceUrl?: string;
   /** The A property bag for the session record */
-  botːSession: Partial<BotSession>;
+  bot_Session?: Partial<BotSession>;
   /** The urn of the conversational agent service provider e.g., "urn:io.iopa.bot:slack", "urn:io.iopa.bot:alexa" */
-  botːSource: string;
+  bot_Source: string;
   /**  The team or organizational identifier (e.g., Slack team) */
-  botːTeam: { id: string /*, globalid?: string */ };
+  bot_Team?: { id: string /*, globalid?: string */ };
   /** The timestamp of the activity */
-  botːTimestamp: number | null;
+  timestamp: number | null;
   /** (The source message as entered by the user (with mentions normalized as needed)) */
-  botːText: string;
+  bot_Text?: string;
   /** The urn of the conversational agent service provider e.g., "urn:io.iopa.bot:slack", "urn:io.iopa.bot:alexa" */
-  botːAttachment?: BotAttachment
+  bot_Attachment?: BotAttachment;
   /** The section header string for grouping purposes */
-  botːSection?: string
+  bot_Section?: string;
+
+  /** Special reading to invoke iopa-bot framework dialog */
+  "urn:bot:dialog:invoke"?: string;
+  /** Unique key */
+  key?: number;
+}
+
+export interface BotReadingLegacy extends BotReading {
+  /** @deprecated legacy bot_text */
+  "urn:consumer:message:text"?: string;
+  /** @deprecated legacy bot_source */
+  "urn:server:source"?: string;
+  /** @deprecated legacy bot_From.id */
+  "urn:consumer:id"?: string;
+  /** @deprecated legacy timstamp  */
+  "urn:server:timestamp"?: number | null;
+  /** @deprecated legacy metadata  */
+  "urn:consumer:metadata"?: { isRead: boolean };
+  /** @deprecated legacy card attachment */
+  card: { type: string; [key: string]: any };
+}
+
+export interface IMessageStoreSimple {
+  items: BotReading[];
+  addListener?: (type: string, listener: Function) => void;
+  removeListener?: (type: string, listener: Function) => void;
 }
 
 /**
@@ -459,60 +532,60 @@ export interface BotReading {
  */
 export interface BotAttachment {
   /**
-   * mimetype/Contenttype for the file
+   * mimeType/Contenttype for the file
    * @type {string}
    * @memberof BotAttachment
    */
-  contentType?: 'application/vnd.microsoft.card.adaptive' 
+  contentType?: "application/vnd.microsoft.card.adaptive" | string;
   /**
    * Embedded content
    * @type {any}
    * @memberof BotAttachment
    */
-  content?: any
+  content?: any;
 }
 
-export interface BotMessageStore {
-  items: Partial<BotReading>[]
-  push: (item: Partial<BotReading>) => Promise<void>
-  store_: (item: Partial<BotReading>) => Promise<void>
-  clear: () => Promise<void>
+export interface IMessageStore {
+  /** The store is prepopulated with any items from session cache */
+  isReady: Promise<void>;
 
-  closeCard: (seq?: number) => Promise<void>
-  removeCard: (seq: number) => Promise<void>
+  items: Partial<BotReading>[];
+  push: (item: Partial<BotReadingLegacy>) => Promise<void>;
+  clear: () => Promise<void>;
 
-  typingIndicatorOn: () => void
-  typingIndicatorOff: () => void
- 
-  addListener?: (type: string, listener: Function) => void
-  removeListener?: (type: string, listener: Function) => void
-  emit: (event, ...args) => void
+  closeCard: (seq?: number) => Promise<void>;
+  removeCard: (seq: number) => Promise<void>;
 
-  utterances: string[]
+  typingIndicatorOn: () => void;
+  typingIndicatorOff: () => void;
+
+  addListener?: (type: string, listener: Function) => void;
+  removeListener?: (type: string, listener: Function) => void;
+  emit: (event, ...args) => void;
+
+  utterances: string[];
 }
 
 export interface BotCapabilities {
+  "urn:io.iopa:app"?: {
+    "iopa.Version": string;
+    [key: string]: any;
+  };
 
-  'urn:io.iopa:app'?: {
-    'iopa.Version': string
-    [key: string]: any
-  }
+  "urn:consumer:profile"?: {
+    "urn:consumer:firstname": string;
+  };
 
-  'urn:consumer:profile'?: {
-    'urn:consumer:firstname': string
-  }
+  "urn:io.iopa.bot:speech": {
+    speak: Function;
+    speakWithPromise: Function;
+  };
 
-  'urn:io:iopa:bot:speech': {
-    speak: Function
-    speakWithPromise: Function
-  }
+  "urn:io.iopa.filestorage": {
+    put: Function;
+  };
 
-  'urn:io.iopa.filestorage': {
-    put: Function
-  }
-
-  'urn:io.iopa.bot.message': BotMessageStore
-
+  "urn:io.iopa.bot:messages": IMessageStore;
 }
 
 export interface BotSessionDialog {
@@ -528,25 +601,150 @@ export interface BotSessionDialog {
   lastPromptActions: any[] | null;
 }
 
+interface BotIntent {
+  name: string;
+  function: FC;
+  schema?: any;
+}
+
+export interface BotSkill {
+  /** unique short name of the skill */
+  name: string;
+
+  /** things to say  */
+  messages: { [key: string]: string };
+
+  /** use a minimal set of utterances or the full cartesian product?  */
+  exhaustiveUtterances: boolean;
+
+  /**  A mapping of keywords to arrays of possible values, for expansion of sample utterances */
+  dictionaries: { [key: string]: string[] };
+
+  /**  The itents that this skill can process */
+  intents: { [key: string]: BotIntent };
+
+  isGlobal(): boolean;
+
+  /** global skills are always used in parsing;  non-global only parsed when launched */
+  global(flag: boolean): this;
+
+  lookupIntent(utterances: string[]): string | undefined;
+
+  /** register a new intent handler for this skill  */
+  intent(intentName: string, func: FC): this;
+  intent(intentName: string, schema: any, func?: FC): this;
+  intent(intentName: string, schema: any | FC, func?: FC): this;
+
+  /** register a new dictionary for this skill  */
+  dictionary(dictionary: { [key: string]: string[] }): this;
+
+  /** @deprecated For alexa-app compatiabilty, just register Intent handler of "urn:io.iopa.bot:launch" */
+  launch(func: FC);
+
+  /** @deprecated For alexa-app compatiabilty,ust register Intent handler of "urn:io.iopa.bot:sessionended" */
+  sessionEnded(func: FC);
+
+  /** Export Helper Function to extract the schema and generate a schema JSON object */
+  schema(): string;
+
+  /** Export Helper Function to generate a list of sample utterances */
+  utterances(): string;
+}
+
 export interface BotSession {
   /** id of the dialog step being executed in the current skill */
-  botːCurrentDialog: BotSessionDialog | null;
+  bot_CurrentDialog: BotSessionDialog | null;
   /** timestamp that the last dialog step ended */
-  botːLastDialogEndedDate: number | null;
+  bot_LastDialogEndedDate: number | null;
   /** Flag indicating whether this intent is the first for this session */
-  botːNewSession: boolean;
+  bot_NewSession: boolean;
   /** id of the current executing bot session */
-  botːSkill: string;
+  bot_Skill: string;
   /** V2 semversion of the current executing bot session;  checked in case flow definition upgraded mid conversation */
-  botːSkillVersion: string;
+  bot_SkillVersion: string;
   /** Skill data for current request */
-  botːSlots: string;
+  bot_Slots: string;
   /** property bag of all data collected in current skill session, including silent properties specifed on card actions */
-  botːVariables: any;
+  bot_Variables: any;
   /** flag indicating whether bot is expecting an answer to a multi-choice prompt */
-  botːisMultiChoicePrompt: boolean;
+  bot_isMultiChoicePrompt: boolean;
 }
 
 //
 // Teams, Specialist specific
 //
+
+//
+// Bot Related Capabilities
+//
+
+export interface ISessionDatabase {
+  get(path: string): Promise<any>;
+  put(path: string, blob: any): Promise<any>;
+  delete(path: string): Promise<any>;
+  isReady: Promise<void>;
+  getKeys(): Promise<string[]>;
+  clear(): Promise<void>;
+}
+
+export interface ISimpleDatabase {
+  get(path: string): Promise<any>;
+  push?(path: string, blob: any): Promise<any>;
+  put(path: string, blob: any): Promise<any>;
+  delete(path: string): Promise<any>;
+  isReady?: Promise<void>;
+}
+
+/** urn:consumer:profile */
+export interface IConsumerProfileSession {
+  /** the unique id of the user/specialist/participant */
+  id: string;
+
+  /** tenant */
+  tenant: string;
+
+  /** skill prefix realm (usually the prefix of the hostname for web applications) */
+  realm: string;
+
+  /** the first name of the user, comnpatible with whendo user profile on all platforms including iOS, Android */
+  readonly "urn:consumer:firstname": string;
+
+  /** the user token used for second factor verifying request url  */
+  token?: string;
+
+  /** the static candidate data from the active table include name, stage, profile, etc.;  not generally updated during session */
+  data?: any;
+
+  /** Flag indicating if this is a new session at last refresh */
+  isNewSession: boolean;
+
+  /** Identify the advertiser, site, publication, etc. that is sending traffic, for example: google, newsletter4, billboard. */
+  utm_source?: string;
+
+  /** The advertising or marketing medium, for example: cpc, banner, email newsletter. */
+  utm_medium?: string;
+
+  /** The individual campaign name, slogan, promo code, etc.. */
+  utm_campaign?: string;
+
+  /** Paid search keywords */
+  utm_term?: string;
+
+  /**  Used to differentiate similar content, or links within the same ad  */
+  utm_content?: string;
+}
+
+export interface IConsumerProfile extends IConsumerProfileSession {
+  /** Promise that resolves once database connection is authenticated and user authorized */
+  isReady: Promise<any>;
+
+  /** whether this user id was supplied validated with a token */
+  readonly isAuthenticated: boolean;
+
+  /** clear profile and remove session data */
+  logout(): Promise<void>;
+
+  save: () => Promise<void>;
+
+  setFirstName: (value: string) => Promise<void>;
+}
