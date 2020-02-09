@@ -4,8 +4,8 @@
   "description": "Use the IOPA framework in TypeScript with zero runtime overhead",
   "author": "iopa <build@iopa.io>",
   "license": "Apache-2.0",
-  "types": "src/index.ts",
-  "ts:main": "index.d.ts",
+  "types": "src/index.d.ts",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/iopa-io/iopa-types.git"
