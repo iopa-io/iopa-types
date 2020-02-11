@@ -2,15 +2,11 @@
   "name": "iopa-types",
   "version": "3.0.0",
   "description": "Use the IOPA framework in TypeScript with zero runtime overhead",
-  "author": "iopa <build@iopa.io>",
-  "license": "Apache-2.0",
-  "types": "src/index.d.ts",
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/iopa-io/iopa-types.git"
-  },
-  "dependencies": {},
+  "types": "src/index.d.ts",
+  "author": "iopa <build@iopa.io>",
+  "engines": {},
+  "homepage": "https://iopa.io",
   "keywords": [
     "iopa",
     "serverless",
@@ -24,9 +20,15 @@
     "bot",
     "conversational agent"
   ],
-  "engines": {},
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iopa-io/iopa-types.git"
+  },
   "scripts": {
     "format": "prettier --ignore-path ../../.gitignore --write '**/*.{js,jsx,ts,tsx,json,md}'"
   },
-  "homepage": "https://iopa.io"
+  "dependencies": {},
+  "devDependencies": {},
+  "peerDependencies": {}
 }
