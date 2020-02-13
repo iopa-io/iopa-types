@@ -51,6 +51,15 @@ export interface BotCapabilitiesBase extends AppCapabilitiesBase {
     put: Function
     delete: (path: string) => Promise<void>
   }
+
+  'urn:ai:karla:devtools:bridge': {
+    devToolsInvoke?: Function
+    invoke?: Function
+  }
+
+  'urn:ai:karla:devtools:renderer': {
+    invoke?: Function
+  }
 }
 
 //
