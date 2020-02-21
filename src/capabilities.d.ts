@@ -36,7 +36,7 @@ export interface BotCapabilitiesBase extends AppCapabilitiesBase {
 
   'urn:io.iopa.bot:skills': ISkillsCapability
 
-  'urn:io.iopa.database:session': ISimpleDatabase
+  'urn:io.iopa.database:session': ISessionDatabase
 
   'urn:io.iopa.database': ISimpleDatabase
 
@@ -117,7 +117,7 @@ export interface ISkillsCapability {
 export interface IReactiveDialogsSimpleCapability {
   ['iopa.Version']: string
   /** render an anonymous reactive-dialog flow or set of directives without pre-registration; */
-  render(element: Function): { [key: string]: any }
+  render(element: Function): void
   /** render an anonymous reactive-dialog flow or set of directives without pre-registration; */
   renderAllAtOnce(element: Function): void
   dispose: () => void
@@ -177,7 +177,7 @@ export interface IMessageStore {
   /** The store is prepopulated with any items from session cache */
   isReady: Promise<void>
 
-  items: Partial<IopaBotReading>[]
+  items: IopaBotReading[]
 
   push: (
     item: Partial<

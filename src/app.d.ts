@@ -30,6 +30,16 @@ interface AppPlugin {
   usePlugin(plugin: Plugin): this
 }
 
+export interface AppCapabilityFactory<T> {
+  properties: Partial<AppProperties<T>>
+
+  capability<K extends keyof T>(key: K): T[K]
+  setCapability<K extends keyof T>(key: K, value: T[K])
+
+  /** add new middleware to the when-do enginge */
+  use(Middleware: Middleware): this
+}
+
 export interface App<T> {
   properties: AppProperties<T>
 

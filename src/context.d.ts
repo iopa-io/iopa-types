@@ -294,7 +294,7 @@ export interface IopaBotReadingBase {
   /** The urn of the conversational agent service provider e.g., "urn:io.iopa.bot:slack", "urn:io.iopa.bot:alexa" */
   'bot.Attachment'?: BotAttachment
   /** The section header string for grouping purposes */
-  'bot.Section'?: string
+  section?: string
 
   /** Special reading to invoke iopa-bot framework dialog */
   'urn:bot:dialog:invoke'?: string
