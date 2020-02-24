@@ -18,7 +18,10 @@ export type IopaBotCapabilities = Capabilities<BotCapabilitiesBase>
 //
 
 export interface AppCapabilitiesBase {
-  'urn:io.iopa:app': { 'server.Version': string }
+  'urn:io.iopa:app': {
+    'server.Version': string
+    'server.Name'?: string
+  }
 }
 
 export interface BotCapabilitiesBase extends AppCapabilitiesBase {
