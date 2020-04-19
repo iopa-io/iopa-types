@@ -41,7 +41,7 @@ export interface BotCapabilitiesBase extends AppCapabilitiesBase {
 
   'urn:io.iopa.database:session': ISessionDatabase
 
-  'urn:io.iopa.database': ISimpleDatabase
+  'urn:io.iopa.database': ISimpleDatabase & { userId(): string }
 
   'urn:io.iopa.bot:session': ISessionCapability
 

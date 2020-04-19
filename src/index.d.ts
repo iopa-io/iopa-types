@@ -99,6 +99,8 @@ export interface CancellationTokenSource {
 }
 export declare class CancellationToken {
   readonly isCancelled: boolean
+
   onCancelled(callback: any): void
+
   throwIfCancelled(): void
 }
