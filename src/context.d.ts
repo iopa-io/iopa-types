@@ -88,6 +88,7 @@ interface RequestBase {
   readonly 'iopa.RemoteAddress': string
   readonly 'iopa.Scheme': string
   readonly 'iopa.Url': IURL
+  'iopa.Params'?: Record<string, string>
 }
 
 export interface IopaResponseBase extends ContextCore {

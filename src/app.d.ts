@@ -20,7 +20,7 @@ export interface AppPropertiesBase<T> {
 
 export type IopaBotAppProperties = AppPropertiesBase<BotCapabilitiesBase>
 
-export interface AppProperties<T> extends IopaMap<AppPropertiesBase<T>> {
+export interface AppProperties<T> extends IopaMap<AppPropertiesBase<T> & T> {
   capability<K extends keyof T>(key: K): T[K]
   setCapability<K extends keyof T>(key: K, value: T[K])
 }
@@ -40,8 +40,8 @@ export interface AppCapabilityFactory<T> {
   use(Middleware: Middleware): this
 }
 
-export interface App<T> {
-  properties: AppProperties<T>
+export interface App<P, T> {
+  properties: AppProperties<P>
 
   capability<K extends keyof T>(key: K): T[K]
   setCapability<K extends keyof T>(key: K, value: T[K])
@@ -70,13 +70,13 @@ export interface App<T> {
   ): IopaContext
 }
 
-export interface IopaBotApp
-  extends App<BotCapabilitiesBase>,
+export interface IopaBotApp<P>
+  extends App<any, BotCapabilitiesBase>,
     AppBotConnector,
     AppBotExtensions,
     AppPlugin {}
 
-export interface RouterApp<T> extends App<T> {
+export interface RouterApp<P, T> extends App<P, T> {
   post: (path: string | RegExp, FC) => this
   get: (path: string | RegExp, FC) => this
   put: (path: string | RegExp, FC) => this
@@ -90,7 +90,7 @@ export interface RouterApp<T> extends App<T> {
   ): Promise<void>
 }
 
-export interface LoggingApp<T> extends App<T> {
+export interface LoggingApp<P, T> extends App<P, T> {
   logging: {
     flush(): void
     log(context: IopaContext, message: any, ...optionalParams: any): void
