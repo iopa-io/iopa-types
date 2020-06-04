@@ -63,6 +63,8 @@ export interface BotCapabilitiesBase extends AppCapabilitiesBase {
   'urn:ai:karla:devtools:renderer': {
     invoke?: Function
   }
+
+  'urn:io.iopa:filehost'?: ISimpleFileHost
 }
 
 //
@@ -77,6 +79,12 @@ export interface ISessionDatabase {
   isReady: Promise<void>
   getKeys(): Promise<string[]>
   clear(): Promise<void>
+}
+
+export interface ISimpleFileHost {
+  ['iopa.Version']: string
+  get(path: string): Promise<Uint8Array> | Uint8Array
+  postResponse(options: { id: number; data: Uint8Array }): void
 }
 
 export interface ISimpleDatabase {
