@@ -1,6 +1,6 @@
 /*
  * Internet Open Protocol Abstraction (IOPA)
- * Copyright (c) 2016 - 2020 Internet of Protocols Alliance
+ * Copyright (c) 2016 - 2020 Internet Open Protocol Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,30 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-export * from './app'
-export * from './capabilities'
-export * from './context'
-export * from './middleware'
-export * from './model'
-
-export interface IopaMap<T> {
-  get<K extends keyof T>(key: K): T[K]
-  set<K extends keyof T>(key: K, value: T[K])
-  delete<K extends keyof T>(key: K): boolean
-  toJSON(): T
-}
-
-export interface IDisposable {
-  dispose(...args: any[]): void
-}
-
-export interface IEventEmitter {
-  emit(event: string, ...args: any[]): void
-  on(event: string, cb: Listener): IDisposable
-  once(event: string, cb: Listener): IDisposable
-  clear(event?: string): void
-}
 
 export interface IURL {
   hash: string
@@ -85,22 +61,4 @@ export interface IURLSearchParams {
     callbackfn: (value: string, key: string, parent: IURLSearchParams) => void,
     thisArg?: any
   ): void
-}
-
-export type Listener = (...args: any[]) => any
-export type Disposer = () => void
-
-export interface CancellationTokenSource {
-  cancel(reason: string): void
-  readonly token: CancellationToken
-  readonly isCancelled: boolean
-  readonly reason: string
-  register(cb: Function): void
-}
-export declare class CancellationToken {
-  readonly isCancelled: boolean
-
-  onCancelled(callback: any): void
-
-  throwIfCancelled(): void
 }

@@ -1,16 +1,29 @@
+/*
+ * Internet Open Protocol Abstraction (IOPA)
+ * Copyright (c) 2016 - 2020 Internet Open Protocol Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import { IopaBotSession } from './model'
-import {
-  Capabilities,
-  IopaBotCapabilities,
-  BotCapabilitiesBase,
-  AppCapabilitiesBase
-} from './capabilities'
+import { BotCapabilitiesBase, AppCapabilitiesBase } from '../capabilities'
 import {
   IEventEmitter,
   CancellationTokenSource,
   CancellationToken,
   IURL,
-  IopaMap
+  IopaMap,
+  IopaRef
 } from './index'
 
 //
@@ -19,10 +32,11 @@ import {
 
 export interface Context<C extends IopaRequestBase, R, CAPABILITIES> {
   /** @deprecated use typesafe function capability() instead */
-  ['server.Capabilities']?: Capabilities<C>
+  ['server.Capabilities']?: IopaMap<C>
 
   // IOPA 3.0 helpers
   capability<K extends keyof CAPABILITIES>(key: K): CAPABILITIES[K]
+  capability<T>(iopaRef: IopaRef<T>): T | undefined
   get<K extends keyof C>(key: K): C[K]
   set<K extends keyof C>(key: K, value: C[K])
   toJSON(): C
@@ -32,7 +46,7 @@ export interface Context<C extends IopaRequestBase, R, CAPABILITIES> {
 
 export type IopaContext = Context<
   IopaRequestBase,
-  IopaBotResponseBase,
+  IopaResponseBase,
   AppCapabilitiesBase
 > &
   IopaRequestBase
@@ -56,7 +70,7 @@ export interface ContextCore {
   'iopa.Events': IEventEmitter
   'iopa.Version': string
   'server.Id': number | string
-  'server.Capabilities': Capabilities<any>
+  'server.Capabilities': IopaMap<any>
   dispose?: () => void
   create?(...args: any[]): this
   log?: (...args: any) => void
