@@ -1,2 +1,2 @@
 export * from './iopaRef'
-export * from './create-plugin'
+export { createPlugin } from './create-plugin'

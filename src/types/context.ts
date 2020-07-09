@@ -30,37 +30,37 @@ import {
 // CONTEXT
 //
 
-export interface Context<C extends IopaRequestBase, R, CAPABILITIES> {
+export interface Context<P extends IopaRequestBase, R, CAPABILITIES> {
   /** @deprecated use typesafe function capability() instead */
-  ['server.Capabilities']?: IopaMap<C>
+  ['server.Capabilities']?: IopaMap<P>
 
   // IOPA 3.0 helpers
   capability<K extends keyof CAPABILITIES>(key: K): CAPABILITIES[K]
   capability<T>(iopaRef: IopaRef<T>): T | undefined
-  get<K extends keyof C>(key: K): C[K]
-  set<K extends keyof C>(key: K, value: C[K])
-  toJSON(): C
+  get<K extends keyof P>(key: K): P[K]
+  set<K extends keyof P>(key: K, value: P[K])
+  toJSON(): P
 
-  response: IopaMap<R> & R
+  response: R
 }
+
+export type IopaResponse = IopaMap<IopaResponseBase> & IopaResponseBase
+
+export type IopaBotResponse = IopaMap<IopaBotResponseBase> & IopaBotResponseBase
 
 export type IopaContext = Context<
   IopaRequestBase,
-  IopaResponseBase,
+  IopaResponse,
   AppCapabilitiesBase
 > &
   IopaRequestBase
 
 export type IopaBotContext = Context<
   IopaBotContextBase,
-  IopaBotResponseBase,
+  IopaBotResponse,
   BotCapabilitiesBase
 > &
   IopaRequestBase
-
-export type IopaResponse = IopaMap<IopaResponseBase> & IopaResponseBase
-
-export type IopaBotResponse = IopaMap<IopaBotResponseBase> & IopaBotResponseBase
 
 //
 // CORE/BASE FIELDS
@@ -125,6 +125,50 @@ export interface IopaResponseBase extends ContextCore {
 }
 
 export interface IopaRequestBase extends ContextBase, Partial<RequestBase> {}
+
+//
+// EDGE SPECIFIC
+//
+
+export interface CookieOptions {
+  maxAge?: number
+  signed?: boolean
+  expires?: Date
+  httpOnly?: boolean
+  path?: string
+  domain?: string
+  secure?: boolean
+  encode?: (val: string) => string
+  sameSite?: boolean | 'lax' | 'strict' | 'none'
+}
+interface IopaEdgeRequestHelpers {
+  header(name: string): string | string[]
+  cookies: Record<string, any>
+  signedCookies: Record<string, any>
+  secret: string
+  query: Record<string, string>
+}
+
+interface IopaEdgeResponseHelpers {
+  cookie(name: string, value: any, options?: CookieOptions): IopaEdgeResponse
+  clearCookie(name: string, options?: CookieOptions): IopaEdgeResponse
+  status(code: number): IopaEdgeResponse
+  header(field: string, value: string | string[]): IopaEdgeResponse
+  append(field: string, value: string | string[]): IopaEdgeResponse
+  location(url): IopaEdgeResponse
+}
+
+export type IopaEdgeResponse = IopaMap<IopaResponseBase> &
+  IopaResponseBase &
+  IopaEdgeResponseHelpers
+
+export type IopaEdgeContext = Context<
+  IopaRequestBase,
+  IopaEdgeResponse,
+  AppCapabilitiesBase
+> &
+  IopaRequestBase &
+  IopaEdgeRequestHelpers
 
 //
 // BOT SPECIFIC
