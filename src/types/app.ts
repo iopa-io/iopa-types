@@ -27,7 +27,7 @@ import type {
   AppCapabilitiesBase
 } from '../capabilities'
 import type { BotSkill } from './model'
-import type { FC, Middleware } from './middleware'
+import type { FC, RouterFunc, Middleware } from './middleware'
 import type { Plugin } from './plugin'
 import type { IopaRef } from './map'
 import type { Config } from './config'
@@ -107,12 +107,12 @@ export interface IopaBotApp
     AppPlugin {}
 
 export interface RouterHooks {
-  post: (path: string | RegExp, component: FC) => this
-  get: (path: string | RegExp, component: FC) => this
-  put: (path: string | RegExp, component: FC) => this
-  delete: (path: string | RegExp, component: FC) => this
-  patch: (path: string | RegExp, component: FC) => this
-  all: (path: string | RegExp, component: FC) => this
+  post: (path: string | RegExp, component: RouterFunc) => this
+  get: (path: string | RegExp, component: RouterFunc) => this
+  put: (path: string | RegExp, component: RouterFunc) => this
+  delete: (path: string | RegExp, component: RouterFunc) => this
+  patch: (path: string | RegExp, component: RouterFunc) => this
+  all: (path: string | RegExp, component: RouterFunc) => this
   route<C>(
     path: string,
     context: IopaContext,

@@ -12,7 +12,7 @@ const URN_STRICT = new RegExp(
 
 class IopaRefImpl<T> implements IopaRef<T> {
   constructor(private readonly config: IopaRefConfig) {
-    if (config.id.startsWith('urn:')) {
+    if (!config.id.startsWith('urn:')) {
       config.id = `urn:${config.id}`
     }
     const valid = URN_STRICT.test(config.id)
@@ -20,10 +20,6 @@ class IopaRefImpl<T> implements IopaRef<T> {
       if (URN_WEAK.test(config.id)) {
         throw new Error(
           `Iopa Ref id must be a valid URN according to RFC2141, got '${config.id}'`
-        )
-      } else {
-        console.error(
-          `Warning: URNs can't have periods in first segment and must have more than one segment, got '${config.id}'`
         )
       }
     }

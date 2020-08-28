@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import { IopaBotContext, IopaContext } from './context'
+import { IopaBotContext, IopaContext, IopaEdgeContext } from './context'
 
 export interface Component {
   /** constructor called once upon registration */
@@ -29,6 +29,8 @@ export type AppFunc = (
   context: IopaContext,
   next: () => Promise<void>
 ) => Promise<void>
+
+export type RouterFunc = (context: IopaEdgeContext) => Promise<void>
 
 export type FC = (
   context: IopaBotContext,

@@ -113,10 +113,7 @@ export interface IopaResponseBase extends ContextCore {
   'iopa.StatusCode': number
   'iopa.StatusText': string
 
-  end(
-    chunk?: any,
-    options?: { headers?: any; status?: number; statustext?: string }
-  ): Promise<void>
+  end(chunk?: any): Promise<void>
   send(
     body: any,
     options?: { headers?: any; status?: number; statustext?: string }
@@ -141,6 +138,7 @@ export interface CookieOptions {
   encode?: (val: string) => string
   sameSite?: boolean | 'lax' | 'strict' | 'none'
 }
+
 interface IopaEdgeRequestHelpers {
   header(name: string): string | string[]
   cookies: Record<string, any>
