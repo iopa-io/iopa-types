@@ -1,4 +1,4 @@
-import type { FlowElement, TableElement } from 'reactive-dialogs'
+import type { FlowElement, TableElement, Element } from 'reactive-dialogs'
 import { createIopaRef } from '../lib'
 import type { IopaBotContext } from '../types'
 

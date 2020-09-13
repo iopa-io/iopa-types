@@ -18,23 +18,26 @@
 import { IopaBotContext, IopaContext, IopaEdgeContext } from './context'
 
 export interface Component {
-  /** constructor called once upon registration */
-  constructor: Function
+    /** constructor called once upon registration */
+    constructor: Function
 
-  /** invoke function called for every reading  */
-  invoke?(context: IopaBotContext, next?: () => Promise<void>): Promise<void>
+    /** invoke function called for every reading  */
+    invoke?(context: IopaBotContext, next?: () => Promise<void>): Promise<void>
 }
 
 export type AppFunc = (
-  context: IopaContext,
-  next: () => Promise<void>
+    context: IopaContext,
+    next: () => Promise<void>
 ) => Promise<void>
 
-export type RouterFunc = (context: IopaEdgeContext) => Promise<void>
+export type RouterFunc = (
+    context: IopaEdgeContext,
+    next?: () => Promise<void>
+) => Promise<void>
 
 export type FC = (
-  context: IopaBotContext,
-  next: () => Promise<void>
+    context: IopaBotContext,
+    next: () => Promise<void>
 ) => Promise<void>
 
 export type Invoker = (context: IopaBotContext) => Promise<void>

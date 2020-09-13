@@ -102,19 +102,19 @@ export interface BotDialog {
   steps: BotDialogStep[]
 }
 
-interface BotIntent {
+export interface BotIntent {
   name: string
   function: FC
   schema?: BotIntentSchema
 }
 
-interface BotIntentSchema {
+export interface BotIntentSchema {
   intent: string
   slots: { [key: string]: string }
   utterances: string[]
 }
 
-interface BotIntentSchemaAlexa {
+export interface BotIntentSchemaAlexa {
   intent: string
   slots: { name: string; type: string }[]
 }

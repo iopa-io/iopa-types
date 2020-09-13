@@ -17,7 +17,7 @@ export interface Plugin {
   contextAlias?: string
 
   /** function that is called once all plugins have been registered */
-  onApplicationReady(app: IopaBotApp<any>): void
+  onApplicationReady(app: IopaBotApp): void
 
   /** Iopa invoke function called once per every reading */
   invoke?(context: IopaBotContext, next?: () => Promise<void>): Promise<void>

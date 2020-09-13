@@ -15,27 +15,39 @@
  * limitations under the License.
  */
 
-export interface IopaMap<T> {
-  get<K extends keyof T>(key: K): T[K]
-  set<K extends keyof T>(key: K, value: T[K])
-  delete<K extends keyof T>(key: K): boolean
-  toJSON(): T
+export interface IopaRefMap<T> {
+    addRef<I extends T>(iopaRef: IopaRef<T>, value: I): I
+    getRef(iopaRef: IopaRef<T>): T | undefined
 }
 
-export interface IopaRefMap {
-  addRef<T, I extends T>(iopaRef: IopaRef<T>, impl: I): I
-  getRef<T>(IopaRef: IopaRef<T>): T | undefined
+export interface IopaMap<T> {
+    get<K extends keyof T>(key: K): T[K]
+    has<K extends keyof T>(key: K): boolean
+    set<K extends keyof T>(key: K, value: T[K])
+    set<K extends keyof T>(value: IopaMapInit<any>)
+    default<K extends keyof T>(key: K, valueFn: () => T[K]): T[K]
+    delete<K extends keyof T>(key: K): boolean
+    entries(): [any, any][]
+    toJSON(): any
 }
+
+export type IopaMapInit<T> = Partial<T> | [keyof T, T[keyof T]][] | IopaMap<T>
+
+export interface IopaHeaders extends IopaMap<Record<string, string>> {
+    set(value: IopaHeadersInit)
+}
+
+export type IopaHeadersInit = IopaMapInit<Record<string, string>>
 
 export type IopaRefConfig = {
-  id: string
-  description: string
+    id: string
+    description: string
 }
 
 export type IopaRef<T> = {
-  id: string
-  description: string
-  T: T
+    id: string
+    description: string
+    T: T
 }
 
 export type Capabilities<T> = IopaMap<T>
