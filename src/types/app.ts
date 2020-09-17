@@ -30,7 +30,7 @@ import type { BotSkill } from './model'
 import type { FC, RouterFunc, Middleware } from './middleware'
 import type { Plugin } from './plugin'
 import type { IopaRef } from './map'
-import type { Config, TestingFrameworkConfig } from './config'
+import type { Config } from './config'
 
 export interface AppPropertiesBase<C> {
     'app.DefaultApp': FC
@@ -47,6 +47,14 @@ export interface AppPropertiesBase<C> {
     'server.Version': string
     'server.CancelTokenSouce'?: CancellationTokenSource
     'server.CancelToken'?: CancellationToken
+    'server.Testing': IopaMap<any>
+    'server.Related': Array<RelatedOutboundRecords<any>>
+}
+
+export type RelatedOutboundRecords<B> = {
+    id: string
+    type: string
+    body: B
 }
 
 export type AppProperties<P, C> = IopaMap<AppPropertiesBase<C> & P> &
@@ -72,6 +80,8 @@ export interface CapabilityApp<P, C> extends ICapability<C> {
     use(Middleware: Middleware): this
 }
 
+export type IopaApp = App<{}, {}>
+
 export interface App<P, C> extends ICapability<C & AppCapabilitiesBase> {
     properties: AppProperties<
         AppPropertiesBase<C & AppCapabilitiesBase> & P,
@@ -83,7 +93,7 @@ export interface App<P, C> extends ICapability<C & AppCapabilitiesBase> {
     use(mw: Middleware, id: string): this
 
     /** v3 create sub App that invokes pipeline when condition is true */
-    fork(when: (context: IopaContext) => boolean): this
+    fork(when: (context: IopaContext) => boolean): IopaApp
 
     /** build the when-do engine;  called once prior to invoke */
     build(): any
@@ -100,6 +110,13 @@ export interface App<P, C> extends ICapability<C & AppCapabilitiesBase> {
             [key: string]: any
         }
     ): IopaContext
+
+    logging: {
+        flush(): void
+        log(context: IopaContext, message: any, ...optionalParams: any): void
+        warn(context: IopaContext, message: any, ...optionalParams: any): void
+        error(context: IopaContext, message: any, ...optionalParams: any): void
+    }
 }
 
 export interface IopaBotApp
@@ -124,31 +141,13 @@ export interface RouterHooks {
 
 export interface RouterApp<P, C> extends App<P, C>, RouterHooks {}
 
-export interface LoggingHooks {
-    logging: {
-        flush(): void
-        log(context: IopaContext, message: any, ...optionalParams: any): void
-        warn(context: IopaContext, message: any, ...optionalParams: any): void
-        error(context: IopaContext, message: any, ...optionalParams: any): void
-    }
-}
-
 export interface ConfigHooks {
     config: Config
 }
 
-export interface LoggingApp<P, T> extends App<P, T>, LoggingHooks {}
+export type LoggingApp<P, T> = App<P, T>
 
-export interface PluginApp
-    extends App<
-            {
-                'server.Testing': TestingFrameworkConfig
-            },
-            {}
-        >,
-        RouterHooks,
-        LoggingHooks,
-        ConfigHooks {
+export interface PluginApp extends App<{}, {}>, RouterHooks, ConfigHooks {
     registerFeatureFlag(flagOptions: { name: string }): this
 }
 

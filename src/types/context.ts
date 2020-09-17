@@ -116,6 +116,7 @@ export interface IopaResponseBase extends ContextCore {
     'iopa.StatusCode': number
     'iopa.StatusText': string
 
+    end(options?: IopaResponseInit): Promise<void>
     end(chunk?: IopaBodyInit, options?: IopaResponseInit): Promise<void>
     send(body: IopaBodyInit, options?: IopaResponseInit): Promise<void>
     sendAll?(body: (string | { [key: string]: any })[]): Promise<void>

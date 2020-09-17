@@ -33,13 +33,4 @@ declare type Config = {
     getOptionalStringArray(key: string): string[] | undefined
 }
 
-declare type TestingFrameworkConfig = IopaMap<Record<string, any>>
-
-export {
-    AppConfig,
-    Config,
-    JsonArray,
-    JsonObject,
-    JsonValue,
-    TestingFrameworkConfig,
-}
+export { AppConfig, Config, JsonArray, JsonObject, JsonValue }
