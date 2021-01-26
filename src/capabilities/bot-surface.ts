@@ -2,7 +2,7 @@ import { createIopaRef } from '../lib'
 
 export const URN_BOT_SURFACE = 'urn:io-iopa:bot:surface'
 
-interface PackageManifest {
+export interface PackageManifest {
   /** file/lib name may be different than npm name in package.json */
   packageName: string
   /** file extension e.g., nkar */

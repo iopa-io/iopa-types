@@ -16,11 +16,20 @@
  * limitations under the License.
  */
 
+import type { IopaMap } from '../types/map'
 import type { URN_APP, IAppCapability } from './app'
 import type { URN_BOT_DIALOG, IBotDialogCapability } from './bot-dialog'
 import type { URN_BOT_SKILLS, IBotSkillsCapability } from './bot-skills'
-import type { URN_BOT_SURFACE, IBotSurfaceCapability } from './bot-surface'
-import type { URN_CONSUMER_PROFILE, IConsumerProfile } from './consumer-profile'
+import type {
+  URN_BOT_SURFACE,
+  IBotSurfaceCapability,
+  PackageManifest
+} from './bot-surface'
+import type {
+  URN_CONSUMER_PROFILE,
+  IConsumerProfile,
+  IConsumerProfileSession
+} from './consumer-profile'
 import type { URN_DEVTOOLS_BRIDGE, IDevToolsBridge } from './devtools-bridge'
 import type {
   URN_DEVTOOLS_RENDERER,
@@ -48,13 +57,14 @@ import type { URN_SIMPLE_DATABASE, ISimpleDatabase } from './simple-database'
 import type { URN_SPEECH, ISpeech } from './speech'
 
 // OTHER IMPORTS
-import type { IopaMap } from '../types/map'
 
 export type {
   IBotDialogCapability as IDialogCapability,
   IBotSkillsCapability as ISkillsCapability,
   IBotSurfaceCapability,
+  PackageManifest,
   IConsumerProfile,
+  IConsumerProfileSession,
   IDevToolsBridge,
   IDevToolsRenderer,
   IEdgeSimpleStorage,
