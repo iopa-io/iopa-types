@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/interface-name-prefix */
 /*
  * Internet Open Protocol Abstraction (IOPA)
  * Copyright (c) 2016 - 2020 Internet Open Protocol Alliance
@@ -73,6 +72,7 @@ export type {
   IMessageStore,
   IMessageStoreSimple,
   IReactiveDialogsCapability,
+  IReactiveDialogsSimpleCapability,
   ISessionCapability,
   ISessionDatabase,
   ISimpleDatabase,
